@@ -7,10 +7,16 @@ install:
   - ps: Start-FileDownload https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.zip jsoncpp-1.8.0.zip
   - 7z x -bd -oC:\projects jsoncpp-1.8.0.zip
 before_build: 
-  - cd c:\projects\jsoncpp
+  - cd c:\projects\jsoncpp-1.8.0
   - cmake .
 build:
   project: c:\projects\jsoncpp\jsoncpp.sln
+after_build:
+  - cd C:\projects
+  - 7z a jsoncpp.zip jsoncpp-1.8.0\include jsoncpp-1.8.0\src\lib_json\Release\*lib
+  - move C:\projects\jsoncpp.zip C:\projects\appveyor-sandbox
+artifacts:
+  - path: jsoncpp.zip
 
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
