@@ -4,7 +4,7 @@ on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
-  - ps: Start-FileDowload https://sourceforge.net/projects/log4cpp/files/log4cpp-1.1.x%20%28new%29/log4cpp-1.1/log4cpp-1.1.1.tar.gz/download log4cpp-1.1.1.tar.gz
+  - ps: Start-FileDownload https://sourceforge.net/projects/log4cpp/files/log4cpp-1.1.x%20%28new%29/log4cpp-1.1/log4cpp-1.1.1.tar.gz/download log4cpp-1.1.1.tar.gz
   - tar -x -f log4cpp-1.1.1.tar.gz -C c:\projects\log4cpp
 
 configuration:
