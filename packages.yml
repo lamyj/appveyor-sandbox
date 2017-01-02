@@ -1,6 +1,7 @@
 version: '{build}'
 image: Visual Studio 2015
 platform:
+  - Win32
   - x64
 configuration:
   - Release
@@ -15,8 +16,16 @@ install:
   - move C:\projects\jsoncpp-1.8.0 C:\projects\jsoncpp
 
 before_build:
+# log4cpp
+  - cd c:\projects\log4cpp
+  - md build
+  - cd build
+  - if %PLATFORM% == Win32 cmake -G "Visual Studio 14 2015" ..
+  - if %PLATFORM% == x64 cmake -G "Visual Studio 14 2015 Win64" ..
+# jsoncpp
   - cd c:\projects\jsoncpp
-  - cmake .
+  - if %PLATFORM% == Win32 cmake -G "Visual Studio 14 2015" .
+  - if %PLATFORM% == x64 cmake -G "Visual Studio 14 2015 Win64" .
 
 build_script:
   - msbuild C:\projects\log4cpp\msvc10\msvc10.sln
