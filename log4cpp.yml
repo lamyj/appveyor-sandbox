@@ -5,10 +5,10 @@ on_finish:
 
 install:
   - ps: Start-FileDownload https://sourceforge.net/projects/log4cpp/files/log4cpp-1.1.x%20%28new%29/log4cpp-1.1/log4cpp-1.1.1.tar.gz/download log4cpp-1.1.1.tar.gz
-  - tar -x -f log4cpp-1.1.1.tar.gz -C c:\projects\log4cpp
+  - tar -x -f log4cpp-1.1.1.tar.gz -C c:\projects
 
 configuration:
   - Release
 
 build:
-  project: C:\projects\Log4Cpp\log4cpp\msvc10\msvc10.sln
+  project: C:\projects\log4cpp\msvc10\msvc10.sln
