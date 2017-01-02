@@ -13,7 +13,7 @@ before_build:
   - cd c:\projects\log4cpp
   - md build
   - cd build
-  - cmake -G "Visual Studio 14 2015 Win64" ..
+  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=C:\projects\log4cpp\build\install\log4cpp ..
 
 build_script:
   - msbuild C:\projects\log4cpp\build\LOG4CPP.sln
