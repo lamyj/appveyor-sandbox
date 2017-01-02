@@ -17,7 +17,7 @@ install:
   - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Fjsoncpp.zip jsoncpp.zip
   - 7z x -bd -oC:\Libraries jsoncpp.zip
 # Log4Cpp
-  - ps:Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Flog4cpp.zip log4cpp.zip
+  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Flog4cpp.zip log4cpp.zip
   - 7z x -bd -oC:\Libraries log4cpp.zip
 
 before_build:
