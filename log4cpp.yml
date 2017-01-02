@@ -1,7 +1,7 @@
 version: '{build}'
 image: Visual Studio 2015
 platform:
-  - Win32
+#  - Win32
   - x64
 configuration:
   - Release
@@ -29,5 +29,5 @@ after_build:
 artifacts:
   - path: log4cpp.zip
 
-# on_finish:
-#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
