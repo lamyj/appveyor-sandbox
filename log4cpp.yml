@@ -1,7 +1,6 @@
 version: '{build}'
 image: Visual Studio 2015
 platform:
-  - Win32
   - x64
 configuration:
   - Release
@@ -14,16 +13,16 @@ before_build:
   - cd c:\projects\log4cpp
   - md build
   - cd build
-  - if %PLATFORM% == Win32 cmake -G "Visual Studio 14 2015" ..
-  - if %PLATFORM% == x64 cmake -G "Visual Studio 14 2015 Win64" ..
+  - cmake -G "Visual Studio 14 2015 Win64" ..
 
-build:
-  project: C:\projects\log4cpp\build\LOG4CPP.sln
+build_script:
+  - msbuild C:\projects\log4cpp\build\LOG4CPP.sln
+  - msbuild C:\projects\log4cpp\build\INSTALL.vcxproj
 
 after_build:
-  - cd C:\projects 
-  - 7z a log4cpp.zip log4cpp\include log4cpp\build\Release\*lib
-  - move C:\projects\log4cpp.zip C:\projects\appveyor-sandbox
+  - cd C:\projects\log4cpp\build\install 
+  - 7z a log4cpp.zip log4cpp
+  - move log4cpp.zip C:\projects\appveyor-sandbox
 
 artifacts:
   - path: log4cpp.zip
