@@ -24,12 +24,14 @@ before_build:
   - if %PLATFORM% == x64 cmake -G "Visual Studio 14 2015 Win64" ..
 # jsoncpp
   - cd c:\projects\jsoncpp
-  - if %PLATFORM% == Win32 cmake -G "Visual Studio 14 2015" .
-  - if %PLATFORM% == x64 cmake -G "Visual Studio 14 2015 Win64" .
+  - md build
+  - cd build
+  - if %PLATFORM% == Win32 cmake -G "Visual Studio 14 2015" ..
+  - if %PLATFORM% == x64 cmake -G "Visual Studio 14 2015 Win64" ..
 
 build_script:
   - msbuild C:\projects\log4cpp\build\LOG4CPP.sln
-  - msbuild C:\projects\jsoncpp\jsoncpp.sln
+  - msbuild C:\projects\jsoncpp\build\jsoncpp.sln
 
 after_build:
   - cd C:\projects 
@@ -38,7 +40,7 @@ after_build:
   - 7z a log4cpp.zip log4cpp\include log4cpp\build\Release\*lib
   - move C:\projects\log4cpp.zip C:\projects\appveyor-sandbox\artifacts
 # jsoncpp
-  - 7z a jsoncpp.zip jsoncpp\include jsoncpp\src\lib_json\Release\*lib
+  - 7z a jsoncpp.zip jsoncpp\include jsoncpp\build\src\lib_json\Release\*lib
   - move C:\projects\jsoncpp.zip C:\projects\appveyor-sandbox\artifacts
 
 artifacts:
