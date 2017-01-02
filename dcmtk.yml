@@ -7,7 +7,7 @@ configuration:
 
 before_build:
   - cd c:\projects
-  - ps: Start-FileDownload http://git.dcmtk.org/?p=dcmtk.git;a=snapshot;h=716832be091d138f3e119c47a4e1e243f5b261d3;sf=tgz dcmtk-3.6.1_20161102.tgz
+  - ps: Start-FileDownload "http://git.dcmtk.org/?p=dcmtk.git;a=snapshot;h=716832be091d138f3e119c47a4e1e243f5b261d3;sf=tgz" dcmtk-3.6.1_20161102.tgz
   - tar -x -f dcmtk-3.6.1_20161102.tgz -C C:\projects
   - cd c:\projects\dcmtk
   - md build
