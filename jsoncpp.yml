@@ -23,7 +23,7 @@ build_script:
 after_build:
   - cd C:\projects\jsoncpp\build\install
   - 7z a jsoncpp.zip jsoncpp
-  - move C:\projects\jsoncpp.zip C:\projects\appveyor-sandbox
+  - move jsoncpp.zip C:\projects\appveyor-sandbox
 
 artifacts:
   - path: jsoncpp.zip
