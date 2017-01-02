@@ -11,10 +11,12 @@ install:
 
 before_build:
   - cd c:\projects\log4cpp
-  - cmake .
+  - md build
+  - cd build
+  - cmake ..
 
 build:
-  project: C:\projects\log4cpp\msvc10\msvc10.sln
+  project: C:\projects\log4cpp\build\LOG4CPP.sln
 
 after_build:
   - cd C:\projects 
@@ -23,3 +25,6 @@ after_build:
 
 artifacts:
   - path: log4cpp.zip
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
