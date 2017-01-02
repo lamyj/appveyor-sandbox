@@ -18,14 +18,15 @@ before_build:
 
 build_script:
   - msbuild C:\projects\jsoncpp\build\jsoncpp.sln
+  - msbuild C:\projects\jsoncpp\build\INSTALL.vcxproj
 
 after_build:
-  - cd C:\projects
-  - 7z a jsoncpp.zip jsoncpp\include jsoncpp\build\src\lib_json\Release\*lib
+  - cd C:\projects\jsoncpp\install
+  - 7z a jsoncpp.zip jsoncpp
   - move C:\projects\jsoncpp.zip C:\projects\appveyor-sandbox
 
 artifacts:
   - path: jsoncpp.zip
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
