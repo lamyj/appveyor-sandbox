@@ -14,10 +14,10 @@ before_build:
   - cd c:\projects\jsoncpp
   - md build
   - cd build
-  - cmake -G "Visual Studio 14 2015 Win64" ..
+  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=c:\projects\jsoncpp\build\install\jsoncpp ..
 
-build:
-  project: c:\projects\jsoncpp\build\jsoncpp.sln
+build_script:
+  - msbuild C:\projects\jsoncpp\build\jsoncpp.sln
 
 after_build:
   - cd C:\projects
@@ -26,3 +26,6 @@ after_build:
 
 artifacts:
   - path: jsoncpp.zip
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
