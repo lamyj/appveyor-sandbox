@@ -1,19 +1,16 @@
 version: '{build}'
 image: Visual Studio 2015
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+configuration:
+  - Release
 
 install:
   - ps: Start-FileDownload https://sourceforge.net/projects/log4cpp/files/log4cpp-1.1.x%20%28new%29/log4cpp-1.1/log4cpp-1.1.1.tar.gz/download log4cpp-1.1.1.tar.gz
   - tar -x -f log4cpp-1.1.1.tar.gz -C c:\projects
-
-configuration:
-  - Release
-
 build:
   project: C:\projects\log4cpp\msvc10\msvc10.sln
 after_build:
-  - cd C:\projects & 7z a log4cpp.zip log4cpp\include log4cpp\msvc10\log4cppLIB\Release\*lib
+  - cd C:\projects 
+  - 7z a log4cpp.zip log4cpp\include log4cpp\msvc10\log4cppLIB\Release\*lib
   - move C:\projects\log4cpp.zip C:\projects\appveyor-sandbox
 artifacts:
   - path: log4cpp.zip
