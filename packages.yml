@@ -43,11 +43,11 @@ after_build:
 # log4cpp
   - cd C:\projects\log4cpp\build\install 
   - 7z a log4cpp.zip log4cpp
-  - move C:\projects\log4cpp.zip C:\projects\appveyor-sandbox\artifacts
+  - move log4cpp.zip C:\projects\appveyor-sandbox\artifacts
 # jsoncpp
   - cd C:\projects\jsoncpp\build\install
   - 7z a jsoncpp.zip jsoncpp
-  - move C:\projects\jsoncpp.zip C:\projects\appveyor-sandbox\artifacts
+  - move jsoncpp.zip C:\projects\appveyor-sandbox\artifacts
 
 artifacts:
   - path: artifacts\log4cpp.zip
