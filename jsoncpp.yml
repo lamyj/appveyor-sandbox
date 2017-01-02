@@ -1,0 +1,17 @@
+version: '{build}'
+image: Visual Studio 2015
+configuration:
+  - Release
+
+install:
+  - ps: Start-FileDownload https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.zip jsoncpp-1.8.0.zip
+  - 7z x -bd -oC:\projects jsoncpp-1.8.0.zip
+before_build: 
+  - cd c:\projects\jsoncpp
+  - cmake .
+build:
+  project: c:\projects\jsoncpp\jsoncpp.sln
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
