@@ -1,5 +1,7 @@
 version: "{build}"
 image: Visual Studio 2015
+platform:
+  - x64
 configuration:
   - Release
 
@@ -14,10 +16,10 @@ install:
   - ps: Start-FileDownload http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-Win64-MSVC2015.zip
   - 7z x -bd -oC:\Libraries icu4c-58_2-Win64-MSVC2015.zip
 # JsonCpp
-  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Fjsoncpp.zip jsoncpp.zip
+  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/8w3fdvstt982rcsw/artifacts/artifacts%2Fjsoncpp.zip jsoncpp.zip
   - 7z x -bd -oC:\Libraries jsoncpp.zip
 # Log4Cpp
-  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Flog4cpp.zip log4cpp.zip
+  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/8w3fdvstt982rcsw/artifacts/artifacts%2Flog4cpp.zip log4cpp.zip
   - 7z x -bd -oC:\Libraries log4cpp.zip
 
 before_build:
@@ -37,5 +39,5 @@ before_build:
 build:
   project: C:\projects\odil\build\odil.sln
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
