@@ -14,6 +14,6 @@ build:
   project: C:\projects\log4cpp\msvc10\msvc10.sln
 after_build:
   - cd C:\projects & 7z a log4cpp.zip log4cpp\include log4cpp\msvc10\log4cppLIB\Release\*lib
+  - move C:\projects\log4cpp.zip C:\projects\appveyor-sandbox
 artifacts:
-  - path: ..\log4cpp.zip
-    name: log4cpp.zip
+  - path: log4cpp.zip
