@@ -1,0 +1,11 @@
+version: '{build}'
+image: Visual Studio 2015
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+install:
+- appveyor DownloadFile "https://sourceforge.net/projects/log4cpp/files/log4cpp-1.1.x%20%28new%29/log4cpp-1.1/log4cpp-1.1.1.tar.gz/download"
+- 7z x -bd -o C:\projects\Log4Cpp log4cpp-1.1.1.tar.gz
+
+build:
+  project: C:\projects\Log4Cpp\log4cpp\msvc10\msvc10.sln
