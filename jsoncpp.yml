@@ -21,7 +21,7 @@ build_script:
   - msbuild C:\projects\jsoncpp\build\INSTALL.vcxproj
 
 after_build:
-  - cd C:\projects\jsoncpp\install
+  - cd C:\projects\jsoncpp\build\install
   - 7z a jsoncpp.zip jsoncpp
   - move C:\projects\jsoncpp.zip C:\projects\appveyor-sandbox
 
