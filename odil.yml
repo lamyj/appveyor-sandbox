@@ -1,0 +1,40 @@
+version: "{build}"
+image: Visual Studio 2015
+configuration:
+  - Release
+
+environment:
+  BOOST_ROOT: C:/Libraries/boost_1_62_0
+  ICU_ROOT: C:/Libraries/icu
+  JsonCpp_ROOT: c:/Libraries/jsoncpp
+  Log4Cpp_ROOT: C:/Libraries/log4cpp
+
+install:
+# ICU4C
+  - ps: Start-FileDownload http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-Win64-MSVC2015.zip
+  - 7z x -bd -oC:\Libraries icu4c-58_2-Win64-MSVC2015.zip
+# JsonCpp
+  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Fjsoncpp.zip jsoncpp.zip
+  - 7z x -bd -oC:\Libraries jsoncpp.zip
+# Log4Cpp
+  - ps:Start-FileDownload https://ci.appveyor.com/api/buildjobs/5eqvcb7v7gh6k98i/artifacts/artifacts%2Flog4cpp.zip log4cpp.zip
+  - 7z x -bd -oC:\Libraries log4cpp.zip
+
+before_build:
+  - cd c:\projects
+  - git clone https://github.com/lamyj/odil
+  - cd c:\projects\odil
+  - md build
+  - cd build
+  - cmake
+    -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_LIBRARYDIR="%BOOST_ROOT%/lib64-msvc-14.0"
+    -DICU_INCLUDE_DIR="%ICU_ROOT%/include" -DICU_LIBRARY="%ICU_ROOT%/lib64/icuuc.lib"
+    -DJsonCpp_INCLUDE_DIR="%JsonCpp_ROOT%/include" -DJsonCpp_LIBRARY="%JsonCpp_ROOT%/src/lib_json/Release/jsoncpplib"
+    -DLog4Cpp_INCLUDE_DIR="%Log4Cpp_ROOT%/include" -DLog4Cpp_LIBRARY="%Log4Cpp_ROOT%/msvc10/log4cppLIB/Release/log4cppLIB.lib"
+    ..
+
+build:
+  project: C:\projects\odil\build\odil.sln
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
