@@ -13,11 +13,11 @@ before_build:
   - cd c:\projects\dcmtk
   - md build
   - cd build
-  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=C:\projects\dcmtk\install\dcmtk ..
+  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=C:\projects\dcmtk\build\install\dcmtk ..
 
 build_script:
   - msbuild C:\projects\dcmtk\build\DCMTK.sln /m
-  - md C:\projects\dcmtk\install\dcmtk\include\dcmtk\config
+  - ps: New-Item -Path C:\projects\dcmtk\build\install\dcmtk\include\dcmtk\config
   - msbuild C:\projects\dcmtk\build\INSTALL.vcxproj
 
 after_build:
