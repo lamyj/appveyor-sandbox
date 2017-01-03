@@ -16,7 +16,7 @@ before_build:
   - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=C:\projects\dcmtk\install\dcmtk ..
 
 build_script:
-  - msbuild C:\projects\dcmtk\build\DCMTK.sln
+  - msbuild C:\projects\dcmtk\build\DCMTK.sln /m
   - msbuild C:\projects\dcmtk\build\INSTALL.vcxproj
 
 after_build:
