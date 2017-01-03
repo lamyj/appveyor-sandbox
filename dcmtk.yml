@@ -17,6 +17,7 @@ before_build:
 
 build_script:
   - msbuild C:\projects\dcmtk\build\DCMTK.sln /m
+  - md C:\projects\dcmtk\install\dcmtk\include\dcmtk\config
   - msbuild C:\projects\dcmtk\build\INSTALL.vcxproj
 
 after_build:
