@@ -1,32 +1,36 @@
 version: '{build}'
 image: Visual Studio 2015
 platform:
+  #- x86
   - x64
 configuration:
   - Release
 
 install:
-  - ps: Start-FileDownload https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.zip jsoncpp-1.8.0.zip
-  - 7z x -bd -oC:\projects jsoncpp-1.8.0.zip
-  - move C:\projects\jsoncpp-1.8.0 C:\projects\jsoncpp
+  - ps: |
+      Start-FileDownload https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.zip jsoncpp-1.8.0.zip
+      7z x -bd -oC:\projects jsoncpp-1.8.0.zip
+      move C:\projects\jsoncpp-1.8.0 "C:\projects\$env:APPVEYOR_PROJECT_NAME"
 
 before_build: 
-  - cd c:\projects\jsoncpp
-  - md build
-  - cd build
-  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=c:\projects\jsoncpp\build\install\jsoncpp ..
+  - ps: |
+      $env:BUILD_DIRECTORY="C:\projects\$env:APPVEYOR_PROJECT_NAME\build"
+      $env:INSTALL_DIRECTORY="$env:BUILD_DIRECTORY\install\$env:APPVEYOR_PROJECT_NAME"
+      New-Item -Path "$env:BUILD_DIRECTORY" -ItemType "directory"
+      cd "$env:BUILD_DIRECTORY"
+      cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX="$env:INSTALL_DIRECTORY" ..
 
 build_script:
-  - msbuild C:\projects\jsoncpp\build\jsoncpp.sln
-  - msbuild C:\projects\jsoncpp\build\INSTALL.vcxproj
+  - ps: |
+      msbuild "$env:BUILD_DIRECTORY\jsoncpp.sln" /m /v:minimal
+      msbuild "$env:BUILD_DIRECTORY\INSTALL.vcxproj" /m /v:minimal
 
 after_build:
-  - cd C:\projects\jsoncpp\build\install
-  - 7z a jsoncpp.zip jsoncpp
-  - move jsoncpp.zip C:\projects\appveyor-sandbox
+  - ps: |
+      cd "$env:BUILD_DIRECTORY\install"
+      7z a "$env:APPVEYOR_PROJECT_NAME.zip" "$env:APPVEYOR_PROJECT_NAME"
+      move jsoncpp.zip C:\projects\appveyor-sandbox
 
 artifacts:
-  - path: jsoncpp.zip
+  - path: $(platform).zip
 
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
