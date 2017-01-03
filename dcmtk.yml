@@ -17,7 +17,7 @@ before_build:
 
 build_script:
   - msbuild C:\projects\dcmtk\build\DCMTK.sln /m
-  - ps: New-Item -Path C:\projects\dcmtk\build\install\dcmtk\include\dcmtk\config
+  - ps: New-Item -Path C:\projects\dcmtk\build\install\dcmtk\include\dcmtk\config -Type Directory
   - msbuild C:\projects\dcmtk\build\INSTALL.vcxproj
 
 after_build:
