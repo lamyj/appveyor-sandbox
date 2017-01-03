@@ -7,6 +7,7 @@ configuration:
   - Release
 environment:
   PROJECT: jsoncpp
+  CMAKE_PROJECT: jsoncpp
 
 install:
   - ps: |
@@ -24,13 +25,13 @@ before_build:
 
 build_script:
   - ps: |
-      msbuild "$env:BUILD_DIRECTORY\jsoncpp.sln" /m /v:minimal
+      msbuild "$env:BUILD_DIRECTORY\$CMAKE_PROJECT.sln" /m /v:minimal
       msbuild "$env:BUILD_DIRECTORY\INSTALL.vcxproj" /m /v:minimal
 
 after_build:
   - ps: |
       cd "$env:APPVEYOR_BUILD_FOLDER"
-      7z a "$env:PROJECT_$env:PLATFORM.zip" "$env:PROJECT"
+      7z a "${env:PROJECT}_${env:PLATFORM}.zip" "$env:PROJECT"
 
 artifacts:
   - path: $(PROJECT)_$(platform).zip
