@@ -13,28 +13,28 @@ install:
   - ps: |
       Start-FileDownload https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.zip jsoncpp-1.8.0.zip
       7z x -bd -oC:\projects jsoncpp-1.8.0.zip
-      move C:\projects\jsoncpp-1.8.0 "C:\projects\$env:PROJECT"
+      move C:\projects\jsoncpp-1.8.0 "C:\projects\${env:PROJECT}"
 
 before_build: 
   - ps: |
-      $env:BUILD_DIRECTORY="$env:APPVEYOR_BUILD_FOLDER\build"
-      $env:INSTALL_DIRECTORY="$env:APPVEYOR_BUILD_FOLDER\$env:PROJECT"
-      New-Item -Path "$env:BUILD_DIRECTORY" -ItemType "directory"
-      cd "$env:BUILD_DIRECTORY"
-      cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX="$env:INSTALL_DIRECTORY" "C:\projects\$env:PROJECT"
+      ${env:BUILD_DIRECTORY}="${env:APPVEYOR_BUILD_FOLDER}\build"
+      ${env:INSTALL_DIRECTORY}="${env:APPVEYOR_BUILD_FOLDER}\${env:PROJECT}"
+      New-Item -Path "${env:BUILD_DIRECTORY}" -ItemType "directory"
+      cd "${env:BUILD_DIRECTORY}"
+      ${generator} = "Visual Studio 14 2015"
+      if (${env:PLATFORM} -eq "x64") { ${generator} = "${generator} Win64" }
+      cmake -G "${generator}" -DCMAKE_INSTALL_PREFIX="${env:INSTALL_DIRECTORY}" "C:\projects\${env:PROJECT}"
 
 build_script:
   - ps: |
-      msbuild "$env:BUILD_DIRECTORY\$CMAKE_PROJECT.sln" /m /v:minimal
-      msbuild "$env:BUILD_DIRECTORY\INSTALL.vcxproj" /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /m /v:minimal
 
 after_build:
   - ps: |
-      cd "$env:APPVEYOR_BUILD_FOLDER"
-      7z a "${env:PROJECT}_${env:PLATFORM}.zip" "$env:PROJECT"
+      cd "${env:APPVEYOR_BUILD_FOLDER}"
+      7z a "${env:PROJECT}_${env:PLATFORM}.zip" "${env:PROJECT}"
 
 artifacts:
   - path: $(PROJECT)_$(platform).zip
 
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
