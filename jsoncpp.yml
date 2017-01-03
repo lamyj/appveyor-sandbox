@@ -5,17 +5,19 @@ platform:
   - x64
 configuration:
   - Release
+environment:
+  PROJECT: jsoncpp
 
 install:
   - ps: |
       Start-FileDownload https://github.com/open-source-parsers/jsoncpp/archive/1.8.0.zip jsoncpp-1.8.0.zip
       7z x -bd -oC:\projects jsoncpp-1.8.0.zip
-      move C:\projects\jsoncpp-1.8.0 "C:\projects\$env:APPVEYOR_PROJECT_NAME"
+      move C:\projects\jsoncpp-1.8.0 "C:\projects\$env:PROJECT"
 
 before_build: 
   - ps: |
-      $env:BUILD_DIRECTORY="C:\projects\$env:APPVEYOR_PROJECT_NAME\build"
-      $env:INSTALL_DIRECTORY="$env:BUILD_DIRECTORY\install\$env:APPVEYOR_PROJECT_NAME"
+      $env:BUILD_DIRECTORY="C:\projects\$env:PROJECT\build"
+      $env:INSTALL_DIRECTORY="$env:BUILD_DIRECTORY\install\$env:PROJECT"
       New-Item -Path "$env:BUILD_DIRECTORY" -ItemType "directory"
       cd "$env:BUILD_DIRECTORY"
       cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX="$env:INSTALL_DIRECTORY" ..
@@ -28,9 +30,11 @@ build_script:
 after_build:
   - ps: |
       cd "$env:BUILD_DIRECTORY\install"
-      7z a "$env:APPVEYOR_PROJECT_NAME.zip" "$env:APPVEYOR_PROJECT_NAME"
+      7z a "$env:PROJECT.zip" "$env:PROJECT"
       move jsoncpp.zip C:\projects\appveyor-sandbox
 
 artifacts:
-  - path: $(platform).zip
+  - path: $(PROJECT)_$(platform).zip
 
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
