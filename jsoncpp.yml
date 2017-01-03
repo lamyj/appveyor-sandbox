@@ -20,7 +20,7 @@ before_build:
       $env:INSTALL_DIRECTORY="$env:APPVEYOR_BUILD_FOLDER\$env:PROJECT"
       New-Item -Path "$env:BUILD_DIRECTORY" -ItemType "directory"
       cd "$env:BUILD_DIRECTORY"
-      cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX="$env:INSTALL_DIRECTORY" ..
+      cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX="$env:INSTALL_DIRECTORY" "C:\projects\$env:PROJECT"
 
 build_script:
   - ps: |
