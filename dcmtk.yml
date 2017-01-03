@@ -20,9 +20,9 @@ build_script:
   - msbuild C:\projects\dcmtk\build\INSTALL.vcxproj
 
 after_build:
-  - cd C:\projects\jsoncpp\build\install
-  - 7z a jsoncpp.zip jsoncpp
-  - move jsoncpp.zip C:\projects\appveyor-sandbox
+  - cd C:\projects\dcmtk\build\install
+  - 7z a dcmtk.zip dcmtk
+  - move dcmtk.zip C:\projects\appveyor-sandbox
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
