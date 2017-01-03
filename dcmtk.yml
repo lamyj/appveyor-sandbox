@@ -9,13 +9,20 @@ before_build:
   - cd c:\projects
   - ps: Start-FileDownload "http://git.dcmtk.org/?p=dcmtk.git;a=snapshot;h=716832be091d138f3e119c47a4e1e243f5b261d3;sf=tgz" dcmtk-3.6.1_20161102.tgz
   - tar -x -f dcmtk-3.6.1_20161102.tgz -C C:\projects
+  - move C:\projects\dcmtk-716832b C:\projects\dcmtk
   - cd c:\projects\dcmtk
   - md build
   - cd build
-  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=c:\projects\dcmtk\install\dcmtk ..
+  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_INSTALL_PREFIX=C:\projects\dcmtk\install\dcmtk ..
 
-build:
-  project: C:\projects\dcmtk\build\dcmtk.sln
+build_script:
+  - msbuild C:\projects\dcmtk\build\DCMTK.sln
+  - msbuild C:\projects\dcmtk\build\INSTALL.vcxproj
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+after_build:
+  - cd C:\projects\jsoncpp\build\install
+  - 7z a jsoncpp.zip jsoncpp
+  - move jsoncpp.zip C:\projects\appveyor-sandbox
+
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
