@@ -30,7 +30,8 @@ install:
       Start-FileDownload https://github.com/lamyj/appveyor-log4cpp/releases/download/v1.1.1-1/log4cpp_1.1.1-1_x64.zip log4cpp.zip
       7z x -bd -oC:\Libraries log4cpp.zip
       
-      git clone https://github.com/lamyj/odil "C:\projects\${env:PROJECT}"
+      cd C:\projects
+      git clone https://github.com/lamyj/odil
 
 before_build:
   - ps: |
