@@ -62,8 +62,8 @@ build:
 
 build_script:
   - ps: |
-      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /m /v:minimal
-      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /p:RuntimeLibrary=MT_StaticRelease /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /p:RuntimeLibrary=MT_StaticRelease /m /v:minimal
 
 after_build:
   - ps: |
