@@ -47,7 +47,7 @@ before_build:
       cmake `
         -G "${generator}" -DCMAKE_INSTALL_PREFIX="${env:INSTALL_DIRECTORY}" `
         -DBUILD_EXAMPLES=OFF -DBUILD_WRAPPERS=OFF -DWITH_DCMTK=OFF `
-        -DBUILD_SHARED_LIBS=OFF `
+        -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="/MT" `
         -DBOOST_LIBRARYDIR="${env:BOOST_ROOT}/lib64-msvc-14.0" `
         -DDCMTK_INCLUDE_DIR="${env:DCMTK_ROOT}/include" -DDCMTK_LIBRARY="${env:DCMTK_ROOT}/lib/dcmdata.lib" `
         -DDCMDATA_LIBRARY="${env:DCMTK_ROOT}/lib/dcmdata.lib" -DDCMNET_LIBRARY="${env:DCMTK_ROOT}/lib/dcmnet.lib" `
@@ -62,8 +62,8 @@ build:
 
 build_script:
   - ps: |
-      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /p:RuntimeLibrary=MT_StaticRelease /m /v:minimal
-      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /p:RuntimeLibrary=MT_StaticRelease /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /m /v:minimal
 
 after_build:
   - ps: |
