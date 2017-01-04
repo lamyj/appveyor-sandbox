@@ -7,38 +7,64 @@ configuration:
 
 environment:
   BOOST_ROOT: C:/Libraries/boost_1_62_0
+  DCMTK_ROOT: c:/Libraries/dcmtk
   ICU_ROOT: C:/Libraries/icu
   JsonCpp_ROOT: c:/Libraries/jsoncpp
   Log4Cpp_ROOT: C:/Libraries/log4cpp
+  PROJECT: odil
+  CMAKE_PROJECT: odil
+  VERSION: 0.7.3-1
 
 install:
-# ICU4C
-  - ps: Start-FileDownload http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-Win64-MSVC2015.zip
-  - 7z x -bd -oC:\Libraries icu4c-58_2-Win64-MSVC2015.zip
-# JsonCpp
-  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/8tw95bp9reghdp2x/artifacts/artifacts%2Fjsoncpp.zip jsoncpp.zip
-  - 7z x -bd -oC:\Libraries jsoncpp.zip
-# Log4Cpp
-  - ps: Start-FileDownload https://ci.appveyor.com/api/buildjobs/8tw95bp9reghdp2x/artifacts/artifacts%2Flog4cpp.zip log4cpp.zip
-  - 7z x -bd -oC:\Libraries log4cpp.zip
+# DCMTK
+  - ps: |
+      Start-FileDownload https://github.com/lamyj/appveyor-dcmtk/releases/download/v3.6.1-20161102-1/dcmtk_3.6.1-20161102-1_x64.zip dcmtk.zip
+      7z x -bd -oC:\Libraries dcmtk.zip
+      
+      Start-FileDownload http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-Win64-MSVC2015.zip
+      7z x -bd -oC:\Libraries icu4c-58_2-Win64-MSVC2015.zip
+      
+      Start-FileDownload https://github.com/lamyj/appveyor-jsoncpp/releases/download/v1.8.0-1/jsoncpp_1.8.0-1_x64.zip jsoncpp.zip
+      7z x -bd -oC:\Libraries jsoncpp.zip
+      
+      Start-FileDownload https://github.com/lamyj/appveyor-log4cpp/releases/download/v1.1.1-1/log4cpp_1.1.1-1_x64.zip log4cpp.zip
+      7z x -bd -oC:\Libraries log4cpp.zip
+      
+      git clone https://github.com/lamyj/odil "C:\projects\${env:PROJECT}"
 
 before_build:
-  - cd c:\projects
-  - git clone https://github.com/lamyj/odil
-  - cd c:\projects\odil
-  - md build
-  - cd build
-  - cmake
-    -G "Visual Studio 14 2015 Win64"
-    -DBUILD_EXAMPLES=OFF -DBUILD_WRAPPERS=OFF -DWITH_DCMTK=OFF
-    -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_LIBRARYDIR="%BOOST_ROOT%/lib64-msvc-14.0"
-    -DICU_INCLUDE_DIR="%ICU_ROOT%/include" -DICU_LIBRARY="%ICU_ROOT%/lib64/icuuc.lib"
-    -DJsonCpp_INCLUDE_DIR="%JsonCpp_ROOT%/include" -DJsonCpp_LIBRARY="%JsonCpp_ROOT%/lib/jsoncpp.lib"
-    -DLog4Cpp_INCLUDE_DIR="%Log4Cpp_ROOT%/include" -DLog4Cpp_LIBRARY="%Log4Cpp_ROOT%/lib/log4cpp.lib"
-    ..
+  - ps: |
+      ${env:BUILD_DIRECTORY}="${env:APPVEYOR_BUILD_FOLDER}\build"
+      ${env:INSTALL_DIRECTORY}="${env:APPVEYOR_BUILD_FOLDER}\${env:PROJECT}"
+      
+      New-Item -Path "${env:BUILD_DIRECTORY}" -ItemType "directory"
+      cd "${env:BUILD_DIRECTORY}"
+      
+      ${generator} = "Visual Studio 14 2015"
+      if (${env:PLATFORM} -eq "x64") { ${generator} = "${generator} Win64" }
+      cmake \
+        -G "${generator}" -DCMAKE_INSTALL_PREFIX="${env:INSTALL_DIRECTORY}" \
+        -DBUILD_EXAMPLES=OFF -DBUILD_WRAPPERS=OFF -DWITH_DCMTK=OFF \
+        -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_LIBRARYDIR="%BOOST_ROOT%/lib64-msvc-14.0" \
+        -DDCMTK_INCLUDE_DIR="%DCMTK_ROOT%/include" -DDCMTK_LIBRARY="%DCMTK_ROOT%/lib/dcmdata.lib" \
+        -DICU_INCLUDE_DIR="%ICU_ROOT%/include" -DICU_LIBRARY="%ICU_ROOT%/lib64/icuuc.lib" \
+        -DJsonCpp_INCLUDE_DIR="%JsonCpp_ROOT%/include" -DJsonCpp_LIBRARY="%JsonCpp_ROOT%/lib/jsoncpp.lib" \
+        -DLog4Cpp_INCLUDE_DIR="%Log4Cpp_ROOT%/include" -DLog4Cpp_LIBRARY="%Log4Cpp_ROOT%/lib/log4cpp.lib" \
+        "C:\projects\${env:PROJECT}"
 
 build:
   project: C:\projects\odil\build\odil.sln
 
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+build_script:
+  - ps: |
+      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /m /v:minimal
+      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /m /v:minimal
+
+after_build:
+  - ps: |
+      cd "${env:APPVEYOR_BUILD_FOLDER}"
+      7z a "${env:PROJECT}_${env:VERSION}_${env:PLATFORM}.zip" "${env:PROJECT}"
+
+artifacts:
+  - path: $(PROJECT)_$(VERSION)_$(platform).zip
+
