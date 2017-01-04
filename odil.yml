@@ -47,7 +47,7 @@ before_build:
       cmake `
         -G "${generator}" -DCMAKE_INSTALL_PREFIX="${env:INSTALL_DIRECTORY}" `
         -DBUILD_EXAMPLES=OFF -DBUILD_WRAPPERS=OFF -DWITH_DCMTK=OFF `
-        -DBUILD_SHARED_LIBS=OFF -DCMAKE_CXX_FLAGS="/MT" `
+        -DBUILD_SHARED_LIBS=OFF `
         -DBOOST_LIBRARYDIR="${env:BOOST_ROOT}/lib64-msvc-14.0" `
         -DDCMTK_INCLUDE_DIR="${env:DCMTK_ROOT}/include" -DDCMTK_LIBRARY="${env:DCMTK_ROOT}/lib/dcmdata.lib" `
         -DDCMDATA_LIBRARY="${env:DCMTK_ROOT}/lib/dcmdata.lib" -DDCMNET_LIBRARY="${env:DCMTK_ROOT}/lib/dcmnet.lib" `
@@ -57,19 +57,18 @@ before_build:
         -DLog4Cpp_INCLUDE_DIR="${env:Log4Cpp_ROOT}/include" -DLog4Cpp_LIBRARY="${env:Log4Cpp_ROOT}/lib/log4cpp.lib" `
         "C:\projects\${env:PROJECT}"
 
-build:
-  project: C:\projects\odil\build\odil.sln
+#build_script:
+#  - ps: |
+#      msbuild "${env:BUILD_DIRECTORY}\${env:CMAKE_PROJECT}.sln" /m /v:minimal
+#      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /m /v:minimal
+#
+#after_build:
+#  - ps: |
+#      cd "${env:APPVEYOR_BUILD_FOLDER}"
+#      7z a "${env:PROJECT}_${env:VERSION}_${env:PLATFORM}.zip" "${env:PROJECT}"
+#
+#artifacts:
+#  - path: $(PROJECT)_$(VERSION)_$(platform).zip
 
-build_script:
-  - ps: |
-      msbuild "${env:BUILD_DIRECTORY}\${CMAKE_PROJECT}.sln" /m /v:minimal
-      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" /m /v:minimal
-
-after_build:
-  - ps: |
-      cd "${env:APPVEYOR_BUILD_FOLDER}"
-      7z a "${env:PROJECT}_${env:VERSION}_${env:PLATFORM}.zip" "${env:PROJECT}"
-
-artifacts:
-  - path: $(PROJECT)_$(VERSION)_$(platform).zip
-
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
