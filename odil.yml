@@ -57,6 +57,8 @@ before_build:
         -DLog4Cpp_INCLUDE_DIR="${env:Log4Cpp_ROOT}/include" -DLog4Cpp_LIBRARY="${env:Log4Cpp_ROOT}/lib/log4cpp.lib" `
         "C:\projects\${env:PROJECT}"
 
+build_script:
+  - echo "..."
 #build_script:
 #  - ps: |
 #      msbuild "${env:BUILD_DIRECTORY}\${env:CMAKE_PROJECT}.sln" /m /v:minimal
