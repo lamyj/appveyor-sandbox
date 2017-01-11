@@ -54,7 +54,7 @@ before_build:
         -DICU_INCLUDE_DIR="${env:ICU_ROOT}/include" -DICU_LIBRARY="${env:ICU_ROOT}/lib64/icuuc.lib" `
         -DJsonCpp_INCLUDE_DIR="${env:JsonCpp_ROOT}/include" -DJsonCpp_LIBRARY="${env:JsonCpp_ROOT}/lib/jsoncpp.lib" `
         -DLog4Cpp_INCLUDE_DIR="${env:Log4Cpp_ROOT}/include" -DLog4Cpp_LIBRARY="${env:Log4Cpp_ROOT}/lib/log4cpp.lib" `
-        "${env:APPVEYOR_BUILD_FOLDER}"
+        "C:\projects\${env:PROJECT}"
 
 build_script:
   - ps: |
