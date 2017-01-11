@@ -8,6 +8,7 @@ configuration:
 environment:
   PROJECT: jsoncpp
   CMAKE_PROJECT: jsoncpp
+  VERSION: 1.8.0-1
 
 install:
   - ps: |
@@ -23,7 +24,11 @@ before_build:
       cd "${env:BUILD_DIRECTORY}"
       ${generator} = "Visual Studio 14 2015"
       if (${env:PLATFORM} -eq "x64") { ${generator} = "${generator} Win64" }
-      cmake -G "${generator}" -DCMAKE_INSTALL_PREFIX="${env:INSTALL_DIRECTORY}" "C:\projects\${env:PROJECT}"
+      cmake `
+        -G "${generator}" -DCMAKE_INSTALL_PREFIX="${env:INSTALL_DIRECTORY}" `
+        -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF `
+        -DJSONCPP_WITH_PKGCONFIG_SUPPORT=OFF `
+        "C:\projects\${env:PROJECT}"
 
 build_script:
   - ps: |
@@ -33,8 +38,19 @@ build_script:
 after_build:
   - ps: |
       cd "${env:APPVEYOR_BUILD_FOLDER}"
-      7z a "${env:PROJECT}_${env:PLATFORM}.zip" "${env:PROJECT}"
+      7z a "${env:PROJECT}_${env:VERSION}_${env:PLATFORM}.zip" "${env:PROJECT}"
 
 artifacts:
-  - path: $(PROJECT)_$(platform).zip
+  - path: $(PROJECT)_$(VERSION)_$(platform).zip
+
+deploy:
+  release: v$(VERSION)
+  description: "v$(VERSION)"
+  provider: GitHub
+  auth_token:
+    secure: Stag2HnDJZFOF5/29yUlXQNlShCTIbAaAH/JLNnO7pb1AUIPGSnNJI4BykbCxVp2
+  artifact: /.*\.zip/
+  on:
+    branch: master
+    appveyor_repo_tag: true
 
