@@ -60,9 +60,9 @@ before_build:
 build_script:
   - ps: |
       msbuild "${env:BUILD_DIRECTORY}\${env:CMAKE_PROJECT}.sln" `
-        /m /clp:Verbosity=minimal /p:Configuration=Release
+        /m /p:Configuration=Release
       msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" `
-        /m /clp:Verbosity=minimal /p:Configuration=Release
+        /m /p:Configuration=Release
 
 after_build:
   - ps: |
