@@ -58,22 +58,23 @@ before_build:
 
 build_script:
   - ps: |
-      msbuild "${env:BUILD_DIRECTORY}\${env:CMAKE_PROJECT}.sln" ` /m 
-      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" ` /m
-
-after_build:
-  - ps: |
-      copy "${env:INSTALL_DIRECTORY}/bin/odil.dll" "${env:BUILD_DIRECTORY}\tests\Release"
-
-test_script:
-  - ps: |
-      ${env:PATH} += ";${env:BOOST_ROOT}/lib64-msvc-14.0;${env:DCMTK_ROOT}/bin"
-      ${env:PATH} += ";${env:ICU_ROOT}/lib64;${env:JSON_CPP}/bin"
-      ${env:PATH} += ";${env:LOG4CPP}/bin"
-      ctest --no-compress-output -T Test `
-        -E "Association|Network|ServiceRole|SCP|SCU|Transport"
-      $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\Testing\*\Test.xml))
+       echo "pouet"
+#      msbuild "${env:BUILD_DIRECTORY}\${env:CMAKE_PROJECT}.sln" ` /m 
+#      msbuild "${env:BUILD_DIRECTORY}\INSTALL.vcxproj" ` /m
+#
+#after_build:
+#  - ps: |
+#      copy "${env:INSTALL_DIRECTORY}/bin/odil.dll" "${env:BUILD_DIRECTORY}\tests\Release"
+#
+#test_script:
+#  - ps: |
+#      ${env:PATH} += ";${env:BOOST_ROOT}/lib64-msvc-14.0;${env:DCMTK_ROOT}/bin"
+#      ${env:PATH} += ";${env:ICU_ROOT}/lib64;${env:JSON_CPP}/bin"
+#      ${env:PATH} += ";${env:LOG4CPP}/bin"
+#      ctest --no-compress-output -T Test `
+#        -E "Association|Network|ServiceRole|SCP|SCU|Transport"
+#      $wc = New-Object 'System.Net.WebClient'
+#      $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\Testing\*\Test.xml))
 
 on_finish:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
