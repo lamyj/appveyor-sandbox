@@ -1,7 +1,31 @@
-#init:
-#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+image: Visual Studio 2017
+platform:
+  - x64
 version: '{build}'
-image: Visual Studio 2015
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
+init:
+  # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - git clone --branch=boost-stringstream https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
+  
+install:
+  # FIXME: add log4cpp
+  - vcpkg install boost dcmtk icu jsoncpp zlib pybind11
+  - cd c:\tools\vcpkg
+  - vcpkg integrate install
+
+before_build:
+  - cd %APPVEYOR_BUILD_FOLDER%\odil
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+
+build:
+  # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+  project: $(APPVEYOR_BUILD_FOLDER)\odil\odil.sln
+
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+cache:
+  - c:\tools\vcpkg\installed\
