@@ -5,10 +5,11 @@ version: '{build}'
 
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - git clone --branch=boost-stringstream https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
   
 install:
+  - git clone --branch=boost-stringstream https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
+  #
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   # FIXME: add log4cpp
   - vcpkg install boost dcmtk icu jsoncpp zlib pybind11
   - cd c:\tools\vcpkg
