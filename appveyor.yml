@@ -3,40 +3,36 @@ platform:
   - x64
 version: '{build}'
 
+environment:
+  BINTRAY: http://dl.bintray.com/lamyj/generic
+  VCPKG_EXPORT: vcpkg-export-20181031-152016.7z
+
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   
 install:
   - git clone https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
   #
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  # - vcpkg install 
-  #     boost-asio:x86-windows boost-date-time:x86-windows 
-  #     boost-detail:x86-windows boost-filesystem:x86-windows 
-  #     boost-fusion:x86-windows boost-iostreams:x86-windows 
-  #     boost-lexical-cast:x86-windows boost-preprocessor:x86-windows 
-  #     boost-property-tree:x86-windows boost-spirit:x86-windows 
-  #     boost-system:x86-windows 
-  #     dcmtk:x86-windows icu:x86-windows jsoncpp:x86-windows zlib:x86-windows 
-  #     pybind11:x86-windows
-  # NOTE Boost >= 1.56.0 is already installed
-  # - vcpkg install boost-asio:x64-windows 
-  # - vcpkg install boost-date-time:x64-windows 
-  # - vcpkg install boost-detail:x64-windows 
-  # - vcpkg install boost-filesystem:x64-windows 
-  # - vcpkg install boost-fusion:x64-windows 
-  # - vcpkg install boost-iostreams:x64-windows 
-  # - vcpkg install boost-lexical-cast:x64-windows 
-  # - vcpkg install boost-log:x64-windows 
-  # - vcpkg install boost-preprocessor:x64-windows 
-  # - vcpkg install boost-property-tree:x64-windows 
-  # - vcpkg install boost-spirit:x64-windows 
-  # - vcpkg install boost-system:x64-windows 
-  - vcpkg install dcmtk:x64-windows 
-  - vcpkg install icu:x64-windows 
-  - vcpkg install jsoncpp:x64-windows 
-  - vcpkg install zlib:x64-windows 
-  - vcpkg install pybind11:x64-windows
+  # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  #
+  # This archive was obtained by:
+  # vcpkg export 
+  #   boost-asio:x64-windows boost-date-time:x64-windows 
+  #   boost-detail:x64-windows boost-filesystem:x64-windows 
+  #   boost-fusion:x64-windows boost-iostreams:x64-windows 
+  #   boost-lexical-cast:x64-windows boost-log:x64-windows 
+  #   boost-property-tree:x64-windows boost-spirit:x64-windows 
+  #   boost-system:x64-windows dcmtk:x64-windows icu:x64-windows 
+  #   jsoncpp:x64-windows zlib:x64-windows pybind11:x64-windows --7zip
+  # TODO add "| out-null" after "7z x"
+  - ps: |
+      if(!(test-path $env:VCPKG_EXPORT)) 
+      { 
+        Invoke-RestMethod $env:BINTRAY/vcpkg-exports/$env:VCPKG_EXPORT -outfile $env:VCPKG_EXPORT 
+      }
+      7z x $env:VCPKG_EXPORT -aos -o "c:\tools\vcpkg"
+  
+  # Extract the whole archive to c:\tools\vcpkg
   # - cd c:\tools\vcpkg
   - vcpkg integrate install
 
@@ -44,7 +40,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%\odil
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_ROOT=C:\Libraries\boost..
+  - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/vcpkg-export-20181031-152016/scripts/buildsystems/vcpkg.cmake ..
 
 build:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
@@ -55,3 +51,4 @@ build:
 
 cache:
   - c:\tools\vcpkg\installed\
+  - c:\tools\vcpkg\vcpkg-export-20181031-152016
