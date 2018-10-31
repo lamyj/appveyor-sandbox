@@ -12,7 +12,7 @@ init:
   
 install:
   - ps: |
-      git clone https://github.com/lamyj/odil.git "${env:APPVEYOR_BUILD_FOLDER}"\odil
+      git clone https://github.com/lamyj/odil.git "${env:APPVEYOR_BUILD_FOLDER}\odil"
   #
   # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   #
