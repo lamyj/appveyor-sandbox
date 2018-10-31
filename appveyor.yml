@@ -5,7 +5,7 @@ version: '{build}'
 
 environment:
   BINTRAY: http://dl.bintray.com/lamyj/generic
-  VCPKG_EXPORT: vcpkg-export-20181031-152016
+  VCPKG_EXPORT: vcpkg-export-20181031-183509
 
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -17,14 +17,7 @@ install:
   # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   #
   # This archive was obtained by:
-  # vcpkg export 
-  #   boost-asio:x64-windows boost-date-time:x64-windows 
-  #   boost-detail:x64-windows boost-filesystem:x64-windows 
-  #   boost-fusion:x64-windows boost-iostreams:x64-windows 
-  #   boost-lexical-cast:x64-windows boost-log:x64-windows 
-  #   boost-property-tree:x64-windows boost-spirit:x64-windows 
-  #   boost-system:x64-windows dcmtk:x64-windows icu:x64-windows 
-  #   jsoncpp:x64-windows zlib:x64-windows pybind11:x64-windows --7zip
+  # vcpkg export boost-asio:x64-windows boost-date-time:x64-windows boost-filesystem:x64-windows boost-fusion:x64-windows boost-iostreams:x64-windows boost-lexical-cast:x64-windows boost-log:x64-windows boost-property-tree:x64-windows boost-spirit:x64-windows dcmtk:x64-windows icu:x64-windows jsoncpp:x64-windows zlib:x64-windows pybind11:x64-windows --7zip
   # TODO add "| out-null" after "7z x"
   - ps: |
       if(!(test-path "${env:VCPKG_EXPORT}.7z")) 
