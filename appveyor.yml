@@ -35,11 +35,13 @@ before_build:
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
       cd build
-      cmake -G "Visual Studio 15 2017 Win64" -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" -DBUILD_PYTHON_WRAPPERS=OFF ..
+      cmake -G "Visual Studio 15 2017 Win64" -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" -DBUILD_PYTHON_WRAPPERS=OFF -DBUILD_TESTING=OFF ..
 
 build:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
   project: $(APPVEYOR_BUILD_FOLDER)\odil\build\odil.sln
+
+# TODO: test_script
 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
