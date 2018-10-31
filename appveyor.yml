@@ -7,7 +7,7 @@ init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   
 install:
-  - git clone --branch=boost-stringstream https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
+  - git clone https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
   #
   - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   # - vcpkg install 
