@@ -19,18 +19,19 @@ install:
   #     boost-system:x86-windows 
   #     dcmtk:x86-windows icu:x86-windows jsoncpp:x86-windows zlib:x86-windows 
   #     pybind11:x86-windows
-  - vcpkg install boost-asio:x64-windows 
-  - vcpkg install boost-date-time:x64-windows 
-  - vcpkg install boost-detail:x64-windows 
-  - vcpkg install boost-filesystem:x64-windows 
-  - vcpkg install boost-fusion:x64-windows 
-  - vcpkg install boost-iostreams:x64-windows 
-  - vcpkg install boost-lexical-cast:x64-windows 
-  - vcpkg install boost-log:x64-windows 
-  - vcpkg install boost-preprocessor:x64-windows 
-  - vcpkg install boost-property-tree:x64-windows 
-  - vcpkg install boost-spirit:x64-windows 
-  - vcpkg install boost-system:x64-windows 
+  # NOTE Boost >= 1.56.0 is already installed
+  # - vcpkg install boost-asio:x64-windows 
+  # - vcpkg install boost-date-time:x64-windows 
+  # - vcpkg install boost-detail:x64-windows 
+  # - vcpkg install boost-filesystem:x64-windows 
+  # - vcpkg install boost-fusion:x64-windows 
+  # - vcpkg install boost-iostreams:x64-windows 
+  # - vcpkg install boost-lexical-cast:x64-windows 
+  # - vcpkg install boost-log:x64-windows 
+  # - vcpkg install boost-preprocessor:x64-windows 
+  # - vcpkg install boost-property-tree:x64-windows 
+  # - vcpkg install boost-spirit:x64-windows 
+  # - vcpkg install boost-system:x64-windows 
   - vcpkg install dcmtk:x64-windows 
   - vcpkg install icu:x64-windows 
   - vcpkg install jsoncpp:x64-windows 
@@ -43,7 +44,7 @@ before_build:
   - cd %APPVEYOR_BUILD_FOLDER%\odil
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+  - cmake -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_ROOT=C:\Libraries\boost..
 
 build:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
