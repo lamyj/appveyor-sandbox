@@ -18,6 +18,7 @@ install:
   #   boost-asio boost-date-time boost-filesystem boost-fusion  boost-iostreams
   #   boost-lexical-cast boost-log boost-property-tree boost-spirit boost-test
   #   boost-uuid dcmtk icu jsoncpp pybind11 zlib
+  # WARNING: DCMTK is built with -DBUILD_APPS=OFF
   - ps: |
       if(!(test-path "${env:VCPKG_EXPORT}.7z")) 
       { 
@@ -32,6 +33,7 @@ install:
   - ps: vcpkg integrate install
 
 before_build:
+  # FIXME: build with Ninja?
   - ps: |
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
@@ -39,7 +41,7 @@ before_build:
       cmake `
         -G "Visual Studio 15 2017 Win64" `
         -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
-        -DBUILD_PYTHON_WRAPPERS=OFF -DBUILD_TESTING=OFF -DWITH_DCMTK=OFF `
+        -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_SCU=OFF `
         ..
 
 build:
