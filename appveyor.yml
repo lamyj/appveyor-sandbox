@@ -39,7 +39,7 @@ before_build:
       cmake `
         -G "Visual Studio 15 2017 Win64" `
         -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
-        -DBUILD_PYTHON_WRAPPERS=OFF -DBUILD_TESTING=OFF `
+        -DBUILD_PYTHON_WRAPPERS=OFF -DBUILD_TESTING=OFF -DWITH_DCMTK=OFF `
         ..
 
 build:
