@@ -5,7 +5,7 @@ version: '{build}'
 
 environment:
   BINTRAY: http://dl.bintray.com/lamyj/generic
-  VCPKG_EXPORT: vcpkg-export-20181031-194415
+  VCPKG_EXPORT: vcpkg-export-20181101-093017
 
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -13,16 +13,17 @@ init:
 install:
   - ps: |
       git clone -q https://github.com/lamyj/odil.git "${env:APPVEYOR_BUILD_FOLDER}\odil"
-  #
-  # - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  #
   # This archive was obtained by:
-  # vcpkg export boost-asio:x64-windows boost-date-time:x64-windows boost-filesystem:x64-windows boost-fusion:x64-windows boost-iostreams:x64-windows boost-lexical-cast:x64-windows boost-log:x64-windows boost-property-tree:x64-windows boost-spirit:x64-windows boost-test:x64-windows dcmtk:x64-windows icu:x64-windows jsoncpp:x64-windows zlib:x64-windows pybind11:x64-windows --7zip
-  # TODO add "| out-null" after "7z x"
+  # vcpkg export --7zip --triplet x64-windows
+  #   boost-asio boost-date-time boost-filesystem boost-fusion  boost-iostreams
+  #   boost-lexical-cast boost-log boost-property-tree boost-spirit boost-test
+  #   boost-uuid dcmtk icu jsoncpp pybind11 zlib
   - ps: |
       if(!(test-path "${env:VCPKG_EXPORT}.7z")) 
       { 
-        Invoke-RestMethod "${env:BINTRAY}/vcpkg-exports/${env:VCPKG_EXPORT}.7z" -outfile "${env:VCPKG_EXPORT}.7z" 
+        Invoke-RestMethod `
+          "${env:BINTRAY}/vcpkg-exports/${env:VCPKG_EXPORT}.7z" `
+          -outfile "${env:VCPKG_EXPORT}.7z"
       }
       7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
   
@@ -35,10 +36,14 @@ before_build:
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
       cd build
-      cmake -G "Visual Studio 15 2017 Win64" -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" -DBUILD_PYTHON_WRAPPERS=OFF -DBUILD_TESTING=OFF ..
+      cmake `
+        -G "Visual Studio 15 2017 Win64" `
+        -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
+        -DBUILD_PYTHON_WRAPPERS=OFF -DBUILD_TESTING=OFF `
+        ..
 
 build:
-  # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
+  # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   project: $(APPVEYOR_BUILD_FOLDER)\odil\build\odil.sln
 
 # TODO: test_script
@@ -48,4 +53,4 @@ build:
 
 cache:
   - c:\tools\vcpkg\installed\
-  - c:\tools\vcpkg\vcpkg-export-20181031-152016
+  - c:\tools\vcpkg\vcpkg-export-20181101-093017
