@@ -46,7 +46,7 @@ build_script:
 
 test_script:
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
-  - ctest -C Test -E "Association|Network|ServiceRole|SCP|SCU|Transport"
+  - .\tests\endian.exe
 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
