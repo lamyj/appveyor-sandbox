@@ -29,8 +29,9 @@ install:
           -outfile "${env:VCPKG_EXPORT}.7z"
       }
       7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
+      
       choco install ninja -y
-      Update-SessionEnvironment
+      $env:Path += ";C:\ProgramData\chocolatey\bin"
   
   # Extract the whole archive to c:\tools\vcpkg
   # - cd c:\tools\vcpkg
