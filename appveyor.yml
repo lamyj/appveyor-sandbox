@@ -8,6 +8,7 @@ environment:
   VCPKG_EXPORT: vcpkg-export-20181101-093017
   VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat'
   ARCHITECTURE: x86_amd64
+  CONFIGURATION: Release
 
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -59,7 +60,7 @@ before_build:
 build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
-  - cmake --build .
+  - cmake --build . --config %CONFIGURATION%
 
 # TODO: test_script
 
