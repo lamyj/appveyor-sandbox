@@ -46,6 +46,7 @@ build_script:
 
 test_script:
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
+  - set PATH=%APPVEYOR_BUILD_FOLDER%\odil\install\bin;%APPVEYOR_BUILD_FOLDER%\odil\build\src;%PATH%
   - .\tests\endian.exe
   - ctest -C Test -R endian -V
   - .\tests\VR.exe
