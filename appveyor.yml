@@ -6,6 +6,8 @@ version: '{build}'
 environment:
   BINTRAY: http://dl.bintray.com/lamyj/generic
   VCPKG_EXPORT: vcpkg-export-20181101-093017
+  # PATH: C:\ProgramData\chocolatey\bin;
+  # "$($env:ChocolateyInstall)\bin"
 
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -27,15 +29,14 @@ install:
           -outfile "${env:VCPKG_EXPORT}.7z"
       }
       7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
-      choco install ninja
+      choco install ninja -y
+      Update-SessionEnvironment
   
   # Extract the whole archive to c:\tools\vcpkg
   # - cd c:\tools\vcpkg
   - ps: vcpkg integrate install
 
 before_build:
-  # TODO: build with Ninja?
-  # FIXME: build Release
   - ps: |
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
@@ -50,7 +51,7 @@ build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   ps: |
     cd "${env:APPVEYOR_BUILD_FOLDER}\odil\build"
-    ninja
+    cmake --build .
 
 # TODO: test_script
 
