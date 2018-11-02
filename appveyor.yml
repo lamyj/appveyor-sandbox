@@ -47,10 +47,7 @@ build_script:
 test_script:
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
   - set PATH=%APPVEYOR_BUILD_FOLDER%\odil\install\bin;%APPVEYOR_BUILD_FOLDER%\odil\build\src;%PATH%
-  - .\tests\endian.exe
-  - ctest -C Test -R endian -V
-  - .\tests\VR.exe
-  - ctest -C Test -R VR -V
+  - ctest -C Test -E "Association|Network|ServiceRole|SCP|SCU|Transport"
 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
