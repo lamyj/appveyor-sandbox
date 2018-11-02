@@ -33,9 +33,11 @@ install:
       choco install ninja -y
       $env:Path += ";C:\ProgramData\chocolatey\bin"
   
-  # Extract the whole archive to c:\tools\vcpkg
   # - cd c:\tools\vcpkg
   - ps: vcpkg integrate install
+  
+  - dir C:\tools
+  - dir C:\ProgramData\chocolatey\bin
 
 before_build:
   - ps: |
