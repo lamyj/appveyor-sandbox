@@ -32,6 +32,7 @@ install:
       
       choco install ninja -y
       $env:Path += ";C:\ProgramData\chocolatey\bin"
+      "$env:Path"
   
   # - cd c:\tools\vcpkg
   - ps: vcpkg integrate install
@@ -41,6 +42,7 @@ install:
 
 before_build:
   - ps: |
+      "$env:Path"
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
       cd build
