@@ -37,7 +37,7 @@ install:
 
 before_build:
   - call "%VCVARSALL%" %ARCHITECTURE%
-  - cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
+  - cd "%APPVEYOR_BUILD_FOLDER%\odil"
   - mkdir build
   - cd build
   - cmake
