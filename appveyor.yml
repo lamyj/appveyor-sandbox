@@ -58,7 +58,7 @@ before_build:
 
 build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
-  - cd "${env:APPVEYOR_BUILD_FOLDER}\odil\build"
+  - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
   - cmake --build .
 
 # TODO: test_script
