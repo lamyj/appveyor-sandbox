@@ -31,8 +31,6 @@ install:
       7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
       
       choco install ninja -y
-      $env:Path += ";C:\ProgramData\chocolatey\bin"
-      "$env:Path"
   
   # - cd c:\tools\vcpkg
   - ps: vcpkg integrate install
@@ -42,12 +40,11 @@ install:
 
 before_build:
   - ps: |
-      "$env:Path"
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
       cd build
       cmake `
-        -G "Ninja" `
+        -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe ` 
         -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
         -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF `
         ..
