@@ -27,26 +27,30 @@ install:
           -outfile "${env:VCPKG_EXPORT}.7z"
       }
       7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
+      choco install ninja
   
   # Extract the whole archive to c:\tools\vcpkg
   # - cd c:\tools\vcpkg
   - ps: vcpkg integrate install
 
 before_build:
-  # FIXME: build with Ninja?
+  # TODO: build with Ninja?
+  # FIXME: build Release
   - ps: |
       cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
       mkdir build
       cd build
       cmake `
-        -G "Visual Studio 15 2017 Win64" `
+        -G "Ninja" `
         -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
         -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF `
         ..
 
-build:
+build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
-  project: $(APPVEYOR_BUILD_FOLDER)\odil\build\odil.sln
+  ps: |
+    cd "${env:APPVEYOR_BUILD_FOLDER}\odil\build"
+    ninja
 
 # TODO: test_script
 
