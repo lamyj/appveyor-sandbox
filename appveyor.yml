@@ -4,7 +4,6 @@ platform:
 version: '{build}'
 
 environment:
-  BINTRAY: http://dl.bintray.com/lamyj/generic
   VCPKG_EXPORT: vcpkg-export-20181101-093017
   VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat'
   ARCHITECTURE: x86_amd64
@@ -14,24 +13,26 @@ init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   
 install:
-  - ps: |
-      git clone -q https://github.com/lamyj/odil.git "${env:APPVEYOR_BUILD_FOLDER}\odil"
+  - git clone -q https://github.com/lamyj/odil.git %APPVEYOR_BUILD_FOLDER%\odil
   # This archive was obtained by:
   # vcpkg export --7zip --triplet x64-windows
   #   boost-asio boost-date-time boost-filesystem boost-fusion  boost-iostreams
   #   boost-lexical-cast boost-log boost-property-tree boost-spirit boost-test
   #   boost-uuid dcmtk icu jsoncpp pybind11 zlib
   # WARNING: DCMTK is built with -DBUILD_APPS=OFF
-  - ps: |
-      if(!(test-path "${env:VCPKG_EXPORT}.7z")) 
-      { 
-        Invoke-RestMethod `
-          "${env:BINTRAY}/vcpkg-exports/${env:VCPKG_EXPORT}.7z" `
-          -outfile "${env:VCPKG_EXPORT}.7z"
-      }
-      7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
-      
-      choco install ninja -y
+  - appveyor DownloadFile http://dl.bintray.com/lamyj/generic/vcpkg-exports/%VCPKG_EXPORT%.7z
+  - 7z x %VCPKG_EXPORT%.7z -aos -oc:\tools\vcpkg
+  - choco install ninja -y
+  # - ps: |
+  #     if(!(test-path "${env:VCPKG_EXPORT}.7z")) 
+  #     { 
+  #       Invoke-RestMethod `
+  #         "${env:BINTRAY}/vcpkg-exports/${env:VCPKG_EXPORT}.7z" `
+  #         -outfile "${env:VCPKG_EXPORT}.7z"
+  #     }
+  #     7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
+  # 
+  #     choco install ninja -y
   
   # - cd c:\tools\vcpkg
   - vcpkg integrate install
@@ -42,32 +43,20 @@ before_build:
   - mkdir build
   - cd build
   - cmake
-      -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe
+      -G Ninja -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe
       -DCMAKE_BUILD_TYPE=%CONFIGURATION%
       -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/%VCPKG_EXPORT%/scripts/buildsystems/vcpkg.cmake
       -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF
       ..
-  # - ps: |
-  #     C:\"Program Files (x86)"\"Microsoft Visual Studio"\2017\Community\VC\Auxiliary\Build\vcvars64.bat
-  #     cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
-  #     mkdir build
-  #     cd build
-  #     cmake `
-  #       -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe `
-  #       -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
-  #       -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF `
-  #       ..
 
 build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
   - cmake --build .
 
-# TODO: test_script
+test_script:
+  - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
+  - ctest -C Test -E "Association|Network|ServiceRole|SCP|SCU|Transport"
 
 # on_finish:
 #   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-
-cache:
-  - c:\tools\vcpkg\installed\
-  - c:\tools\vcpkg\vcpkg-export-20181101-093017
