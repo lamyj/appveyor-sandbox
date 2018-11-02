@@ -43,7 +43,8 @@ before_build:
   - cd build
   - cmake
       -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe
-      -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/%VCPKG_EXPORT%/scripts/buildsystems/vcpkg.cmake"
+      -DCMAKE_BUILD_TYPE=%CONFIGURATION%
+      -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/%VCPKG_EXPORT%/scripts/buildsystems/vcpkg.cmake
       -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF
       ..
   # - ps: |
@@ -60,7 +61,7 @@ before_build:
 build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
-  - cmake --build . --config %CONFIGURATION%
+  - cmake --build .
 
 # TODO: test_script
 
