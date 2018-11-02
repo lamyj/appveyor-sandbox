@@ -6,8 +6,8 @@ version: '{build}'
 environment:
   BINTRAY: http://dl.bintray.com/lamyj/generic
   VCPKG_EXPORT: vcpkg-export-20181101-093017
-  # PATH: C:\ProgramData\chocolatey\bin;
-  # "$($env:ChocolateyInstall)\bin"
+  VCVARSALL: '%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat'
+  ARCHITECTURE: x86_amd64
 
 init:
   # - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -33,27 +33,33 @@ install:
       choco install ninja -y
   
   # - cd c:\tools\vcpkg
-  - ps: vcpkg integrate install
-  
-  - dir C:\tools
-  - dir C:\ProgramData\chocolatey\bin
+  - vcpkg integrate install
 
 before_build:
-  - ps: |
-      cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
-      mkdir build
-      cd build
-      cmake `
-        -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe `
-        -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
-        -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF `
-        ..
+  - call "%VCVARSALL%" %ARCHITECTURE%
+  - cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
+  - mkdir build
+  - cd build
+  - cmake
+      -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe
+      -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/%VCPKG_EXPORT%/scripts/buildsystems/vcpkg.cmake"
+      -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF
+      ..
+  # - ps: |
+  #     C:\"Program Files (x86)"\"Microsoft Visual Studio"\2017\Community\VC\Auxiliary\Build\vcvars64.bat
+  #     cd "${env:APPVEYOR_BUILD_FOLDER}\odil"
+  #     mkdir build
+  #     cd build
+  #     cmake `
+  #       -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe `
+  #       -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
+  #       -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF `
+  #       ..
 
 build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
-  ps: |
-    cd "${env:APPVEYOR_BUILD_FOLDER}\odil\build"
-    cmake --build .
+  - cd "${env:APPVEYOR_BUILD_FOLDER}\odil\build"
+  - cmake --build .
 
 # TODO: test_script
 
