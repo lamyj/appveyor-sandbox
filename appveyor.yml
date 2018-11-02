@@ -44,7 +44,7 @@ before_build:
       mkdir build
       cd build
       cmake `
-        -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe ` 
+        -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/ProgramData/chocolatey/bin/ninja.exe `
         -D"CMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/${env:VCPKG_EXPORT}/scripts/buildsystems/vcpkg.cmake" `
         -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF `
         ..
