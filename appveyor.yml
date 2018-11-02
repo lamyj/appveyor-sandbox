@@ -23,18 +23,6 @@ install:
   - appveyor DownloadFile http://dl.bintray.com/lamyj/generic/vcpkg-exports/%VCPKG_EXPORT%.7z
   - 7z x %VCPKG_EXPORT%.7z -aos -oc:\tools\vcpkg
   - choco install ninja -y
-  # - ps: |
-  #     if(!(test-path "${env:VCPKG_EXPORT}.7z")) 
-  #     { 
-  #       Invoke-RestMethod `
-  #         "${env:BINTRAY}/vcpkg-exports/${env:VCPKG_EXPORT}.7z" `
-  #         -outfile "${env:VCPKG_EXPORT}.7z"
-  #     }
-  #     7z x "${env:VCPKG_EXPORT}.7z" -aos -o"c:\tools\vcpkg"
-  # 
-  #     choco install ninja -y
-  
-  # - cd c:\tools\vcpkg
   - vcpkg integrate install
 
 before_build:
@@ -47,12 +35,14 @@ before_build:
       -DCMAKE_BUILD_TYPE=%CONFIGURATION%
       -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/%VCPKG_EXPORT%/scripts/buildsystems/vcpkg.cmake
       -DBUILD_PYTHON_WRAPPERS=OFF -DUSE_BUILTIN_DCMTK_GETSCU=OFF
+      -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%\odil\install
       ..
 
 build_script:
   # WARNING: should be $(APPVEYOR_BUILD_FOLDER)\build\$(APPVEYOR_PROJECT_NAME).sln
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
   - cmake --build .
+  - cmake --build . --target install
 
 test_script:
   - cd "%APPVEYOR_BUILD_FOLDER%\odil\build"
